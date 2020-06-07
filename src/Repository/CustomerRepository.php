@@ -43,9 +43,6 @@ class CustomerRepository extends ServiceEntityRepository
         ;
     }
     */
-
-    
-
     public function findOneByIdentificationNumber($value): ?Customer
     {
         return $this->createQueryBuilder('c')

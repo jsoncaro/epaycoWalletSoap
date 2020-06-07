@@ -64,8 +64,6 @@ class WalletRepository extends ServiceEntityRepository
      public function saveWallet($customer)
     {
         $newWallet = new Wallet();
-        //env(HEALTH_CHECK_METHOD)
-
         $newWallet
             ->setBalance(10000)
             ->setCustomer($customer);
@@ -74,5 +72,17 @@ class WalletRepository extends ServiceEntityRepository
         $this->manager->flush();
 
         return $newWallet;
+    }
+
+    public function rechargeWallet($customer,$value)
+    {
+        $wallet = $customer->getWallet();
+        $currentBallance = $wallet->getBalance();
+        $wallet->setBalance((integer)$currentBallance + (integer)$value);
+
+        $this->manager->persist($wallet);
+        $this->manager->flush();
+
+        return $wallet;
     }
 }

@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
-
+use App\Service\WalletService;
 
 class CustomerController extends AbstractController
 //class CustomerController extends FOSRestController
@@ -38,4 +38,6 @@ class CustomerController extends AbstractController
         return $response;
 
     }
+
+    
 }

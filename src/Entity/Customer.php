@@ -32,6 +32,11 @@ class Customer
      */
     private $cellphone;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Wallet::class, mappedBy="client", cascade={"persist", "remove"})
+     */
+    private $wallet;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -81,6 +86,23 @@ class Customer
     public function setCellphone(string $cellphone): self
     {
         $this->cellphone = $cellphone;
+
+        return $this;
+    }
+
+    public function getWallet(): ?Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(Wallet $wallet): self
+    {
+        $this->wallet = $wallet;
+
+        // set the owning side of the relation if necessary
+        if ($wallet->getClient() !== $this) {
+            $wallet->setClient($this);
+        }
 
         return $this;
     }

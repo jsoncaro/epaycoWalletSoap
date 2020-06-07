@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:tns="urn:arnleadservicewsdl"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="urn:paymentservicewsdl">
+    <types>
+        <xsd:schema targetNamespace="urn:paymentwsdl">
+            <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+            <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+        </xsd:schema>
+    </types>
+
+    <message name="makepaymentRequest">
+        <part name="identificationNumber" type="xsd:string" />
+        <part name="cellphone" type="xsd:string" />
+        <part name="value" type="xsd:integer" />
+    </message>
+    <message name="confirmpaymentRequest">
+        <part name="sessionId" type="xsd:string" />
+        <part name="token" type="xsd:string" />
+    </message>
+
+    <message name="makepaymentResponse">
+        <part name="response" type="xsd:string" />
+    </message>
+    <message name="confirmpaymentResponse">
+        <part name="response" type="xsd:string" />
+    </message>
+
+    <portType name="paymentwsdlPortType">
+        <operation name="makepayment">
+            <documentation>Make Payment SOAP</documentation>
+            <input message="tns:makepaymentRequest"/>
+            <output message="tns:makepaymentResponse"/>
+        </operation>
+        <operation name="confirmpayment">
+            <documentation>Confirm Payment SOAP</documentation>
+            <input message="tns:confirmpaymentRequest"/>
+            <output message="tns:confirmpaymentResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="paymentwsdlBinding" type="tns:paymentwsdlPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="makepayment">
+            <soap:operation soapAction="urn:arnleadservicewsdl#makepayment" style="rpc"/>
+            <input>
+                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </input>
+            <output>
+                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </output>
+        </operation>
+        <operation name="confirmpayment">
+            <soap:operation soapAction="urn:arnleadservicewsdl#confirmpayment" style="rpc"/>
+            <input>
+                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </input>
+            <output>
+                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="paymentwsdl">
+        <port name="paymentwsdlPort" binding="tns:paymentwsdlBinding">
+            <soap:address location="http://wallet.epayco.io/soap/payment"/>
+        </port>
+    </service>
+</definitions>

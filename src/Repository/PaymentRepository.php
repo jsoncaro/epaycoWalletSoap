@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Payment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Uid\Uuid;
+
 
 /**
  * @method Payment|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +17,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class PaymentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+
+    public function __construct
+    (
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+    )
     {
         parent::__construct($registry, Payment::class);
+        $this->manager = $manager;
     }
 
     // /**
@@ -47,4 +57,29 @@ class PaymentRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function savePayment($wallet,$value){
+        $newPayment = new Payment();
+        $token = $this->genterateToken();
+        $customer = $wallet->getCustomer();
+        $newPayment
+            ->setToken($token)
+            ->setConfirmed(false)
+            ->setValue((integer)$value)
+            ->setWallet($wallet);
+
+        $this->manager->persist($newPayment);
+        $this->manager->flush();
+
+        return $newPayment;
+    }
+
+
+    private function genterateToken(){
+
+        $uuid = Uuid::v6();
+        $token = substr(str_shuffle(strtoupper((string)str_replace("-", "",$uuid))),  
+                       0, 6);
+        return $token;
+    }
 }

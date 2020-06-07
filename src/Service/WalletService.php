@@ -18,29 +18,34 @@ class WalletService
         $this->walletRepository = $walletRepository;
     }
 
-    public function rechargeWallet($identificationNumber,$cellphone,$value)
+    public function getWalletByCustomer($identificationNumber,$cellphone,$value)
     {   
-        try {
-            if (empty($identificationNumber) || empty($cellphone) || empty($value)) {
+        if (empty($identificationNumber) || empty($cellphone) || empty($value)) {
 
-               throw new NotFoundHttpException('Los parametros: identificationNumber,cellphone y value son obligatorios!');
+           throw new NotFoundHttpException('Los parametros: identificationNumber,cellphone y value son obligatorios!');
+        }else{
+
+            $customer = $this->customerRepository->findOneBy(['identificationNumber'=>$identificationNumber,'cellphone'=>$cellphone]);
+            if($customer){
+                return $customer->getWallet();
             }else{
+                throw new NotFoundHttpException('No se encontro el cliente con número de identificación: '.$identificationNumber.' y el celular:'.$cellphone);
+               
+            }
+        }
+        return json_encode($response);
+    }
 
-                $customer = $this->customerRepository->findOneBy(['identificationNumber'=>$identificationNumber,'cellphone'=>$cellphone]);
-                if($customer){
-                        
-                    $recharge = $this->walletRepository->rechargeWallet($customer,$value);
-                    $response = array(
-                        'success' => true,
-                        'message' => 'La billetera se recargó correctamente el nuevo saldo es: '
-                    );
-                }else{
-
-                   $response = array('success' => false,
-                    'cod_error' => '422',
-                    'message_error' => 'No se encontro el cliente con número de identificación: '.$identificationNumber.' y el celular:'.$cellphone
-                    );
-                }
+    public function rechargeWallet($identificationNumber,$cellphone,$value)
+    {
+        try {
+            $wallet = $this->getWalletByCustomer($identificationNumber,$cellphone,$value);
+            $recharge = $this->walletRepository->rechargeWallet($wallet,$value);
+            if ($recharge) {
+                $response = array(
+                    'success' => true,
+                    'message' => 'La billetera se recargó correctamente el nuevo saldo es: '.$wallet->getBalance()
+                );
             }
         }catch(\Exception $e) {
             $response = array(
@@ -52,32 +57,14 @@ class WalletService
         return json_encode($response);
     }
 
-    public function chekWalletBalance($identificationNumber,$cellphone)
-    {   
+    public function checkWalletBalance($identificationNumber,$cellphone,$value=1)
+    {
         try {
-            if (empty($identificationNumber) || empty($cellphone)) {
-
-               throw new NotFoundHttpException('Los parametros: identificationNumber y cellphone son obligatorios!');
-            }else{
-
-                $customer = $this->customerRepository->findOneBy(array('identificationNumber'=>$identificationNumber,'cellphone'=>$cellphone));
-                if($customer){
-                        
-                    $wallet = $customer->getWallet();
-                    $currentBallance = $wallet->getBalance();
-                    $response = array(
-                        'success' => true,
-                        'message' => 'El saldo actual de la billetera es: '.$currentBallance
-                    );
-                }else{
-
-                   $response = array('success' => false,
-                    'cod_error' => '422',
-                    'message_error' => 'No se encontro el cliente con número de identificación: '.$identificationNumber.' y el celular:'.$cellphone
-                    );
-                   
-                }
-            }
+            $wallet = $this->getWalletByCustomer($identificationNumber,$cellphone,$value);
+            $response = array(
+                    'success' => true,
+                    'message' => 'El saldo actual de la billetera es: '.$wallet->getBalance()
+                );
         }catch(\Exception $e) {
             $response = array(
                 'success' => false,

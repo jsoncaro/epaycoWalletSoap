@@ -16,6 +16,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
 use App\Service\WalletService;
+use App\Service\PaymentService;
 
 class CustomerController extends AbstractController
 //class CustomerController extends FOSRestController
@@ -38,6 +39,4 @@ class CustomerController extends AbstractController
         return $response;
 
     }
-
-    
 }

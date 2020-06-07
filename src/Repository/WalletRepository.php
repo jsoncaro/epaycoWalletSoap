@@ -15,10 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class WalletRepository extends ServiceEntityRepository
 {
-   /* public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, Wallet::class);
-    }*/
 
     private $manager;
 
@@ -74,9 +70,8 @@ class WalletRepository extends ServiceEntityRepository
         return $newWallet;
     }
 
-    public function rechargeWallet($customer,$value)
+    public function rechargeWallet($wallet,$value)
     {
-        $wallet = $customer->getWallet();
         $currentBallance = $wallet->getBalance();
         $wallet->setBalance((integer)$currentBallance + (integer)$value);
 

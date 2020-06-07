@@ -49,6 +49,18 @@ class Customer
         return $this;
     }
 
+    public function getFullname(): ?string
+    {
+        return $this->fullname;
+    }
+
+    public function setFullname(string $fullname): self
+    {
+        $this->fullname = $fullname;
+
+        return $this;
+    }
+
     public function getEmail(): ?string
     {
         return $this->email;

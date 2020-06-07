@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:tns="urn:arnleadservicewsdl"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="urn:customerservicewsdl">
+
+    <types>
+        <xsd:schema targetNamespace="urn:customerwsdl">
+            <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+            <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
+        </xsd:schema>
+    </types>
+
+    <message name="customerRequest">
+        <part name="identificationNumber" type="xsd:string" />
+        <part name="fullname" type="xsd:string" />
+        <part name="email" type="xsd:string" />
+        <part name="cellphone" type="xsd:string" />
+    </message>
+
+    <message name="customerResponse">
+        <part name="response" type="xsd:string" />
+    </message>
+
+    <portType name="customerwsdlPortType">
+        <operation name="createcustomer">
+            <documentation>customer SOAP</documentation>
+            <input message="tns:customerRequest"/>
+            <output message="tns:customerResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="customerwsdlBinding" type="tns:customerwsdlPortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="createcustomer">
+            <soap:operation soapAction="urn:arnleadservicewsdl#createcustomer" style="rpc"/>
+
+            <input>
+                <soap:body use="encoded" namespace="urn:customerwsdl"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </input>
+
+            <output>
+                <soap:body use="encoded" namespace="urn:customerwsdl"
+                           encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="customerwsdl">
+        <port name="customerwsdlPort" binding="tns:customerwsdlBinding">
+            <soap:address location="http://wallet.epayco.io/soap/customer" />
+        </port>
+    </service>
+</definitions>

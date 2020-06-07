@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Customer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Customer|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CustomerRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $manager;
+
+    public function __construct
+    (
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+    )
     {
         parent::__construct($registry, Customer::class);
+        $this->manager = $manager;
     }
 
     // /**
@@ -36,15 +44,40 @@ class CustomerRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Customer
+    
+
+    public function findOneByIdentificationNumber($value): ?Customer
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
+            ->andWhere('c.identificationNumber = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+
+    public function findOneByEmail($value): ?Customer
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.email = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function saveCustomer($identificationNumber,$fullname,$email,$cellphone)
+    {
+        $newCustomer = new Customer();
+
+        $newCustomer
+            ->setIdentificationNumber($identificationNumber)
+            ->setFullName($fullname)
+            ->setEmail($email)
+            ->setCellphone($cellphone);
+
+        $this->manager->persist($newCustomer);
+        $this->manager->flush();
+    }
+    
 }

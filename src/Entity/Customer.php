@@ -33,7 +33,7 @@ class Customer
     private $cellphone;
 
     /**
-     * @ORM\OneToOne(targetEntity=Wallet::class, mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Wallet::class, mappedBy="customer", cascade={"persist", "remove"})
      */
     private $wallet;
 

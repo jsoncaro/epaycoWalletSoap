@@ -45,18 +45,6 @@ class Wallet
         return $this->id;
     }
 
-    public function getWalletId(): ?int
-    {
-        return $this->walletId;
-    }
-
-    public function setWalletId(int $walletId): self
-    {
-        $this->walletId = $walletId;
-
-        return $this;
-    }
-
     public function getBalance(): ?int
     {
         return $this->balance;

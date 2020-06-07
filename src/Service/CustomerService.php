@@ -3,14 +3,18 @@
 namespace App\Service;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use App\Repository\CustomerRepository;
+use App\Repository\WalletRepository;
 
 class CustomerService
 {
     private $customerRepository;
 
-    public function __construct(CustomerRepository $customerRepository)
-    {
+    public function __construct(
+        CustomerRepository $customerRepository,
+        WalletRepository $walletRepository
+    ){
         $this->customerRepository = $customerRepository;
+        $this->walletRepository = $walletRepository;
     }
 
     public function createCustomer($identificationNumber,$fullname,$email,$cellphone)
@@ -35,10 +39,11 @@ class CustomerService
                         );
                     }else{
 
-                        $this->customerRepository->saveCustomer($identificationNumber,$fullname,$email,$cellphone);
+                        $newCustomer = $this->customerRepository->saveCustomer($identificationNumber,$fullname,$email,$cellphone);
+                        $this->walletRepository->saveWallet($newCustomer);
                         $response = array(
                             'success' => true,
-                            'message' => 'El cliente se creó correctamente!'
+                            'message' => 'El cliente y su nueva billetera se crearon correctamente!'
                         );
                     }
                 }

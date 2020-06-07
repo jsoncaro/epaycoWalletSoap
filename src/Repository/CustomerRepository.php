@@ -78,6 +78,8 @@ class CustomerRepository extends ServiceEntityRepository
 
         $this->manager->persist($newCustomer);
         $this->manager->flush();
+
+        return $newCustomer;
     }
     
 }

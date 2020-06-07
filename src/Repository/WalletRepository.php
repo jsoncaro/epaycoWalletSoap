@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * @method Wallet|null find($id, $lockMode = null, $lockVersion = null)
@@ -14,9 +15,21 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class WalletRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+   /* public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Wallet::class);
+    }*/
+
+    private $manager;
+
+    public function __construct
+    (
+        ManagerRegistry $registry,
+        EntityManagerInterface $manager
+    )
+    {
+        parent::__construct($registry, Wallet::class);
+        $this->manager = $manager;
     }
 
     // /**
@@ -47,4 +60,19 @@ class WalletRepository extends ServiceEntityRepository
         ;
     }
     */
+
+     public function saveWallet($customer)
+    {
+        $newWallet = new Wallet();
+        //env(HEALTH_CHECK_METHOD)
+
+        $newWallet
+            ->setBalance(10000)
+            ->setCustomer($customer);
+
+        $this->manager->persist($newWallet);
+        $this->manager->flush();
+
+        return $newWallet;
+    }
 }

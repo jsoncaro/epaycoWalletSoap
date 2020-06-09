@@ -78,7 +78,7 @@
 
     <service name="walletwsdl">
         <port name="walletwsdlPort" binding="tns:walletwsdlBinding">
-            <soap:address location="http://wallet.epayco.io/soap/wallet" />
+            <soap:address location="http://127.0.0.1:8000/soap/wallet" />
         </port>
     </service>
 </definitions>

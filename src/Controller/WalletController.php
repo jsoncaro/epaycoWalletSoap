@@ -33,11 +33,10 @@ class WalletController extends AbstractController
         $response->setContent(ob_get_clean());
 
         return $response;
-
     }
 
     /**
-     * @Route("/soap/wallet/balance",name="chekWalletBalanceSoap")
+     * @Route("/soap/wallet/balance",name="checkWalletBalanceSoap")
      */
     public function chekWalletBalance(Request $request,WalletService $walletService)
     {    
@@ -52,6 +51,5 @@ class WalletController extends AbstractController
         $response->setContent(ob_get_clean());
 
         return $response;
-
     }
 }

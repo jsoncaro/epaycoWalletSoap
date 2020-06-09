@@ -25,4 +25,9 @@ class Kernel extends BaseKernel
         $routes->import('../config/{routes}/*.yaml');
         $routes->import('../config/{routes}.yaml');
     }
+
+    public function getProjectDir(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

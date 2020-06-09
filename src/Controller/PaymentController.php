@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +20,7 @@ class PaymentController extends AbstractController
      */
     public function makePayment(Request $request,PaymentService $paymentService)
     {    
-        $soapServer = new \SoapServer(dirname(__DIR__,1).DIRECTORY_SEPARATOR .'Wsdl'. DIRECTORY_SEPARATOR .'payment.wsdl');
+         $soapServer = new \SoapServer(\dirname(__DIR__,2).DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR .'wsdl'. DIRECTORY_SEPARATOR .'payment.wsdl');
         $soapServer->setObject($paymentService);
 
         $response = new Response();
@@ -39,11 +38,12 @@ class PaymentController extends AbstractController
      */
     public function confirmPayment(Request $request,PaymentService $paymentService)
     {    
-        $soapServer = new \SoapServer(dirname(__DIR__,1).DIRECTORY_SEPARATOR .'Wsdl'. DIRECTORY_SEPARATOR .'payment.wsdl');
+        $soapServer = new \SoapServer(\dirname(__DIR__,2).DIRECTORY_SEPARATOR.'public'.DIRECTORY_SEPARATOR .'wsdl'. DIRECTORY_SEPARATOR .'payment.wsdl');
         $soapServer->setObject($paymentService);
 
         $response = new Response();
         $response->headers->set('Content-Type', 'text/xml; charset=ISO-8859-1');
+        //$response->headers->set('Content-Type', 'text/xml:text/xml; charset=UTF-8');
 
         ob_start();
         $soapServer->handle();

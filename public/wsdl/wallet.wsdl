@@ -7,73 +7,78 @@
              xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
              xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
              xmlns="http://schemas.xmlsoap.org/wsdl/"
-             targetNamespace="urn:paymentservicewsdl">
+             targetNamespace="urn:walletservicewsdl">
+
     <types>
-        <xsd:schema targetNamespace="urn:paymentwsdl">
+        <xsd:schema targetNamespace="urn:walletwsdl">
             <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
             <xsd:import namespace="http://schemas.xmlsoap.org/wsdl/" />
         </xsd:schema>
     </types>
 
-    <message name="makepaymentRequest">
+    <message name="rechargewalletRequest">
         <part name="identificationNumber" type="xsd:string" />
         <part name="cellphone" type="xsd:string" />
         <part name="value" type="xsd:integer" />
     </message>
-    <message name="confirmpaymentRequest">
-        <part name="sessionId" type="xsd:string" />
-        <part name="token" type="xsd:string" />
+     <message name="checkwalletbalanceRequest">
+        <part name="identificationNumber" type="xsd:string" />
+        <part name="cellphone" type="xsd:string" />
     </message>
 
-    <message name="makepaymentResponse">
+    <message name="rechargewalletResponse">
         <part name="response" type="xsd:string" />
     </message>
-    <message name="confirmpaymentResponse">
+    <message name="checkwalletbalanceResponse">
         <part name="response" type="xsd:string" />
     </message>
 
-    <portType name="paymentwsdlPortType">
-        <operation name="makepayment">
-            <documentation>Make Payment SOAP</documentation>
-            <input message="tns:makepaymentRequest"/>
-            <output message="tns:makepaymentResponse"/>
+    <portType name="walletwsdlPortType">
+        <operation name="rechargewallet">
+            <documentation>Recharge Wallet SOAP</documentation>
+            <input message="tns:rechargewalletRequest"/>
+            <output message="tns:rechargewalletResponse"/>
         </operation>
-        <operation name="confirmpayment">
-            <documentation>Confirm Payment SOAP</documentation>
-            <input message="tns:confirmpaymentRequest"/>
-            <output message="tns:confirmpaymentResponse"/>
+        <operation name="checkwalletbalance">
+            <documentation>Check Wallet Balance SOAP</documentation>
+            <input message="tns:checkwalletbalanceRequest"/>
+            <output message="tns:checkwalletbalanceResponse"/>
         </operation>
     </portType>
 
-    <binding name="paymentwsdlBinding" type="tns:paymentwsdlPortType">
+    <binding name="walletwsdlBinding" type="tns:walletwsdlPortType">
         <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
-        <operation name="makepayment">
-            <soap:operation soapAction="urn:arnleadservicewsdl#makepayment" style="rpc"/>
+        <operation name="rechargewallet">
+            <soap:operation soapAction="urn:arnleadservicewsdl#rechargewallet" style="rpc"/>
+
             <input>
-                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                <soap:body use="encoded" namespace="urn:walletwsdl"
                            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </input>
+
             <output>
-                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                <soap:body use="encoded" namespace="urn:walletwsdl"
                            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </output>
         </operation>
-        <operation name="confirmpayment">
-            <soap:operation soapAction="urn:arnleadservicewsdl#confirmpayment" style="rpc"/>
+        <operation name="checkwalletbalance">
+            <soap:operation soapAction="urn:arnleadservicewsdl#checkwalletbalance" style="rpc"/>
+
             <input>
-                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                <soap:body use="encoded" namespace="urn:walletwsdl"
                            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </input>
+
             <output>
-                <soap:body use="encoded" namespace="urn:paymentwsdl"
+                <soap:body use="encoded" namespace="urn:walletwsdl"
                            encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
             </output>
         </operation>
     </binding>
 
-    <service name="paymentwsdl">
-        <port name="paymentwsdlPort" binding="tns:paymentwsdlBinding">
-            <soap:address location="http://127.0.0.1:8000/soap/payment"/>
+    <service name="walletwsdl">
+        <port name="walletwsdlPort" binding="tns:walletwsdlBinding">
+            <soap:address location="http://127.0.0.1:8000/soap/soap/wallet" />
         </port>
     </service>
 </definitions>

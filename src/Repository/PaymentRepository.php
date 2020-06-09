@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Payment;
+use App\Entity\Session;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Uid\Uuid;
+use App\Repository\SessionRepository;
 
 
 /**
@@ -18,15 +20,18 @@ use Symfony\Component\Uid\Uuid;
 class PaymentRepository extends ServiceEntityRepository
 {
     private $manager;
+    private $sessionRepository;
 
     public function __construct
     (
         ManagerRegistry $registry,
-        EntityManagerInterface $manager
+        EntityManagerInterface $manager,
+        SessionRepository $sessionRepository
     )
     {
         parent::__construct($registry, Payment::class);
         $this->manager = $manager;
+        $this->sessionRepository = $sessionRepository;
     }
 
     // /**
@@ -69,9 +74,24 @@ class PaymentRepository extends ServiceEntityRepository
             ->setWallet($wallet);
 
         $this->manager->persist($newPayment);
+        $session = $this->sessionRepository->generateSession($newPayment);
+        $newPayment
+            //->setToken($sessionId);
+            ->setSession($session);
+        $this->manager->persist($newPayment);
         $this->manager->flush();
 
         return $newPayment;
+    }
+
+    public function processPayment($payment)
+    {
+        $payment
+            ->setConfirmed(true);
+        $this->manager->persist($payment);
+        $this->manager->flush();
+
+        return $payment;
     }
 
 
@@ -82,4 +102,5 @@ class PaymentRepository extends ServiceEntityRepository
                        0, 6);
         return $token;
     }
+
 }

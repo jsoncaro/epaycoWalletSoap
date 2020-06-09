@@ -38,6 +38,16 @@ class Payment
      */
     private $wallet;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Session::class, mappedBy="payment", cascade={"persist", "remove"})
+     */
+    private $session;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Session::class, mappedBy="payment", cascade={"persist", "remove"})
+     */
+    private $sessionUuid;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -99,6 +109,40 @@ class Payment
     public function setWallet(?Wallet $wallet): self
     {
         $this->wallet = $wallet;
+
+        return $this;
+    }
+
+    public function getSession(): ?Session
+    {
+        return $this->session;
+    }
+
+    public function setSession(Session $session): self
+    {
+        $this->session = $session;
+
+        // set the owning side of the relation if necessary
+        if ($session->getPayment() !== $this) {
+            $session->setPayment($this);
+        }
+
+        return $this;
+    }
+
+    public function getSessionUuid(): ?Session
+    {
+        return $this->sessionUuid;
+    }
+
+    public function setSessionUuid(Session $sessionUuid): self
+    {
+        $this->sessionUuid = $sessionUuid;
+
+        // set the owning side of the relation if necessary
+        if ($sessionUuid->getPayment() !== $this) {
+            $sessionUuid->setPayment($this);
+        }
 
         return $this;
     }

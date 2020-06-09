@@ -80,4 +80,14 @@ class WalletRepository extends ServiceEntityRepository
 
         return $wallet;
     }
+
+    public function discountBalance($wallet,$value)
+    {
+        $currentBallance = $wallet->getBalance();
+        $wallet->setBalance((integer)$currentBallance - (integer)$value);
+        $this->manager->persist($wallet);
+        $this->manager->flush();
+
+        return $wallet;
+    }
 }
